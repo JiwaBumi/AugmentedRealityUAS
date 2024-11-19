@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1034615498206",
+    "project_id": "augmentedrealityuas",
+    "storage_bucket": "augmentedrealityuas.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1034615498206:android:5bc1a6f9402f9f9621a94f",
+        "android_client_info": {
+          "package_name": "com.uas.augmentedrealityproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBT9P-7rgnkpupAn32sHJFfOqcq5EDSVaA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
