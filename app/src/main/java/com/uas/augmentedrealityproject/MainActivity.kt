@@ -3,25 +3,7 @@ package com.uas.augmentedrealityproject
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-
-import com.uas.augmentedrealityproject.ui.theme.AugmentedRealityProjectTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavHost
-import androidx.navigation.compose.*
-import androidx.navigation.compose.rememberNavController
-import android.widget.Toast
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,9 +15,20 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
 import com.uas.augmentedrealityproject.ui.theme.AugmentedRealityProjectTheme
 
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            AugmentedRealityProjectTheme {
+                LoginScreen()
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainActivity() {
+fun LoginScreen() {
     val auth = FirebaseAuth.getInstance()
 
     var email by remember { mutableStateOf("") }
@@ -53,15 +46,12 @@ fun MainActivity() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Registration successful
                     email = ""
                     password = ""
                     confirmPassword = ""
                     errorMessage = ""
                     isRegistering = false
-                    // Optionally navigate to Homepage
                 } else {
-                    // Registration failed
                     errorMessage = "Registration failed: ${task.exception?.message}"
                 }
             }
@@ -71,7 +61,7 @@ fun MainActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Login successful, navigate to Homepage
+                    // Login successful
                 } else {
                     errorMessage = "Login failed: ${task.exception?.message}"
                 }
@@ -155,6 +145,6 @@ fun MainActivity() {
 @Composable
 fun DefaultPreview() {
     AugmentedRealityProjectTheme {
-        MainActivity()
+        LoginScreen()
     }
 }
