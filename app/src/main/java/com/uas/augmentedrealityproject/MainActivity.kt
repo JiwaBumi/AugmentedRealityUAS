@@ -9,18 +9,32 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
 import com.uas.augmentedrealityproject.ui.theme.AugmentedRealityProjectTheme
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.compose.runtime.Composable
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AugmentedRealityProjectTheme {
-                LoginScreen()
+                val navController = rememberNavController()
+                NavHost(
+                    navController = navController,
+                    startDestination = "login"
+                ) {
+                    composable("login") { LoginScreen(navController) }
+                    composable("homepage") { Homepage(navController) }  // Directly linking your Homepage composable here
+                }
             }
         }
     }
@@ -28,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavHostController) {
     val auth = FirebaseAuth.getInstance()
 
     var email by remember { mutableStateOf("") }
@@ -61,7 +75,10 @@ fun LoginScreen() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Login successful
+                    // Navigate to the homepage after successful login
+                    navController.navigate("homepage") {
+                        popUpTo("login") { inclusive = true } // Clear back stack
+                    }
                 } else {
                     errorMessage = "Login failed: ${task.exception?.message}"
                 }
@@ -143,8 +160,8 @@ fun LoginScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun LoginScreenPreview() {
     AugmentedRealityProjectTheme {
-        LoginScreen()
+        LoginScreen(rememberNavController())
     }
 }

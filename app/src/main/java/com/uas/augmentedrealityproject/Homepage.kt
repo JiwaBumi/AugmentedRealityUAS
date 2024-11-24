@@ -30,10 +30,10 @@ fun Homepage(navController: NavController) {
                     IconButton(onClick = {
                         // Sign out the user
                         auth.signOut()
-                        // Navigate back to the main activity (login screen)
-                        navController.navigate("main") {
-                            // Pop all previous destinations from the stack
-                            popUpTo("main") { inclusive = true }
+                        // Navigate back to the MainActivity (login screen)
+                        navController.navigate("login") {
+                            // Pop all previous destinations from the stack so the user can't go back to the homepage
+                            popUpTo("login") { inclusive = true }
                         }
                     }) {
                         Icon(
