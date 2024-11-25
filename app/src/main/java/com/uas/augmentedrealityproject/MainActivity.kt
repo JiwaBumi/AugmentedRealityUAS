@@ -20,6 +20,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uas.augmentedrealityproject.products.BathubProduct
+import com.uas.augmentedrealityproject.products.ChairProduct
+import com.uas.augmentedrealityproject.products.DrawerProduct
+import com.uas.augmentedrealityproject.products.StoolProduct
+import com.uas.augmentedrealityproject.products.TVProduct
+import com.uas.augmentedrealityproject.products.TableProduct
+import com.uas.augmentedrealityproject.viewmodel.CartViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -28,12 +36,21 @@ class MainActivity : ComponentActivity() {
         setContent {
             AugmentedRealityProjectTheme {
                 val navController = rememberNavController()
+                val cartViewModel: CartViewModel = viewModel()
+
                 NavHost(
                     navController = navController,
                     startDestination = "login"
                 ) {
                     composable("login") { LoginScreen(navController) }
-                    composable("homepage") { Homepage(navController) }  // Directly linking your Homepage composable here
+                    composable("homepage") { Homepage(navController) }
+                    composable("shoppingcart") { ShoppingCart(navController, cartViewModel) }
+                    composable("table") { TableProduct(navController, cartViewModel) }
+                    composable("chair") { ChairProduct(navController, cartViewModel) }
+                    composable("bathub") { BathubProduct(navController, cartViewModel) }
+                    composable("stool") { StoolProduct(navController, cartViewModel) }
+                    composable("tv") { TVProduct(navController, cartViewModel) }
+                    composable("drawer") { DrawerProduct(navController, cartViewModel) }
                 }
             }
         }
@@ -77,7 +94,7 @@ fun LoginScreen(navController: NavHostController) {
                 if (task.isSuccessful) {
                     // Navigate to the homepage after successful login
                     navController.navigate("homepage") {
-                        popUpTo("login") { inclusive = true } // Clear back stack
+                        popUpTo("login") { inclusive = true }
                     }
                 } else {
                     errorMessage = "Login failed: ${task.exception?.message}"

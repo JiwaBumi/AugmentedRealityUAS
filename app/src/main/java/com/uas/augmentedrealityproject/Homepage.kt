@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,37 +18,44 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.uas.augmentedrealityproject.ui.theme.AugmentedRealityProjectTheme
 
+data class Product(val name: String, val description: String, val imageRes: Int)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Homepage(navController: NavController) {
     val auth = FirebaseAuth.getInstance()
 
+    // Product list
+    val products = listOf(
+        Product("Bathub", "A luxurious bathub for relaxation.", R.drawable.mo_bathub),
+        Product("Chair", "A comfortable chair for your home.", R.drawable.mo_chair),
+        Product("Drawer", "A stylish drawer to keep your essentials.", R.drawable.mo_drawer),
+        Product("Stool", "A sturdy stool for any occasion.", R.drawable.mo_stool),
+        Product("Table", "A modern table for your living room.", R.drawable.mo_table),
+        Product("TV", "A high-definition television.", R.drawable.mo_tv)
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    // Logout button
                     IconButton(onClick = {
-                        // Sign out the user
                         auth.signOut()
-                        // Navigate back to the MainActivity (login screen)
                         navController.navigate("login") {
-                            // Pop all previous destinations from the stack so the user can't go back to the homepage
                             popUpTo("login") { inclusive = true }
                         }
                     }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.door_out), // Your door_out asset
+                            painter = painterResource(id = R.drawable.door_out),
                             contentDescription = "Logout"
                         )
                     }
                 },
                 title = {},
                 actions = {
-                    // Shopping cart button
                     IconButton(onClick = { navController.navigate("shoppingcart") }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.shopping_cart), // Your shopping cart asset
+                            painter = painterResource(id = R.drawable.shopping_cart),
                             contentDescription = "Shopping Cart"
                         )
                     }
@@ -57,7 +65,6 @@ fun Homepage(navController: NavController) {
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
-
             Text(
                 text = "Hot Products Right Now!",
                 style = MaterialTheme.typography.headlineSmall,
@@ -71,24 +78,35 @@ fun Homepage(navController: NavController) {
                     .padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(3) { index ->
+                items(products.take(3)) { product ->
                     Box(
                         modifier = Modifier
-                            .width(400.dp)  // Modify carousel item width here
-                            .height(150.dp) // Same but for height
+                            .width(400.dp)
+                            .height(150.dp)
                             .padding(8.dp)
                             .clickable {
-                                // Navigate to PlaceholderProduct when clicked
-                                navController.navigate("exampleproduct")
+                                // Navigate to the respective screen based on the product name
+                                when (product.name) {
+                                    "Bathub" -> navController.navigate("bathub")
+                                    "Chair" -> navController.navigate("chair")
+                                    "Drawer" -> navController.navigate("drawer")
+                                    "Stool" -> navController.navigate("stool")
+                                    "TV" -> navController.navigate("tv")
+                                    "Table" -> navController.navigate("table")
+                                    else -> navController.navigate("homepage") // Fallback
+                                }
                             },
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Carousel Item ${index + 1}", style = MaterialTheme.typography.headlineSmall)
+                        Image(
+                            painter = painterResource(id = product.imageRes),
+                            contentDescription = product.name,
+                            modifier = Modifier.fillMaxSize()
+                        )
                     }
                 }
             }
 
-            // Label above product list
             Text(
                 text = "View All Products",
                 style = MaterialTheme.typography.headlineSmall,
@@ -101,24 +119,32 @@ fun Homepage(navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(16.dp)
             ) {
-                items(10) { index ->
+                items(products) { product ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                navController.navigate("exampleproduct")
+                                // Navigate to the respective screen based on product name
+                                when (product.name) {
+                                    "Table" -> navController.navigate("table")
+                                    "Chair" -> navController.navigate("chair")
+                                    "Drawer" -> navController.navigate("drawer")
+                                    "Stool" -> navController.navigate("stool")
+                                    "TV" -> navController.navigate("tv")
+                                    "Bathub" -> navController.navigate("bathub")
+                                }
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.placeholder_image),
-                            contentDescription = "Product Image",
+                            painter = painterResource(id = product.imageRes),
+                            contentDescription = product.name,
                             modifier = Modifier.size(64.dp)
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Column {
-                            Text("Product Title $index")
-                            Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+                            Text(product.name, style = MaterialTheme.typography.titleMedium)
+                            Text(product.description, style = MaterialTheme.typography.bodySmall)
                         }
                     }
                 }
