@@ -3,8 +3,10 @@ package com.uas.augmentedrealityproject.products
 import com.uas.augmentedrealityproject.R
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -23,6 +25,18 @@ import com.uas.augmentedrealityproject.viewmodel.CartViewModel
 @Composable
 fun BathubProduct(navController: NavController, cartViewModel: CartViewModel) {
     val productId = 5
+
+    //To be used in the carousel (lazyrow)
+    val productList = listOf(
+        "bathub" to R.drawable.mo_bathub,
+        "table" to R.drawable.mo_table,
+        "drawer" to R.drawable.mo_drawer,
+        "tv" to R.drawable.mo_tv,
+        "stool" to R.drawable.mo_stool,
+        "chair" to R.drawable.mo_chair
+    )
+
+    val recommendedProducts = productList.filter { it.first != "bathub" }.shuffled().take(3)
 
     Scaffold(
         topBar = {
@@ -135,15 +149,22 @@ fun BathubProduct(navController: NavController, cartViewModel: CartViewModel) {
                     .padding(vertical = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(3) { index ->
+                items(recommendedProducts) { product ->
                     Box(
                         modifier = Modifier
                             .width(200.dp)
                             .height(200.dp)
-                            .padding(8.dp),
+                            .padding(8.dp)
+                            .clickable {
+                                navController.navigate(product.first)
+                            },
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Product ${index + 1}", style = MaterialTheme.typography.headlineSmall)
+                        Image(
+                            painter = painterResource(id = product.second),
+                            contentDescription = "${product.first.capitalize()} Image",
+                            modifier = Modifier.fillMaxSize()
+                        )
                     }
                 }
             }
