@@ -104,15 +104,20 @@ fun LoginScreen(navController: NavHostController) {
     }
 
     fun handleLogin() {
+        // Show the initial Snackbar message while logging in
+        showSnackbar("Logging You In...")
+
         // Run Firebase operation in a background thread
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val result = auth.signInWithEmailAndPassword(email, password).await()
+                // Directly sign in the user without storing the result
+                auth.signInWithEmailAndPassword(email, password).await()
                 withContext(Dispatchers.Main) {
-                    // Navigate to homepage
+                    // Navigate to homepage after successful login
                     navController.navigate("homepage") {
                         popUpTo("login") { inclusive = true }
                     }
+                    // After login, show the success message
                     showSnackbar("Logged In Successfully!")
                 }
             } catch (e: Exception) {
@@ -122,6 +127,9 @@ fun LoginScreen(navController: NavHostController) {
             }
         }
     }
+
+
+
 
 
     Scaffold(
