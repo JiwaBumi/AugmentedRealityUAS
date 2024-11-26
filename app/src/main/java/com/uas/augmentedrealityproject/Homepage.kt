@@ -27,12 +27,12 @@ fun Homepage(navController: NavController) {
 
     // Product list
     val products = listOf(
-        Product("Bathub", "A luxurious bathub for relaxation.", R.drawable.mo_bathub),
-        Product("Chair", "A comfortable chair for your home.", R.drawable.mo_chair),
-        Product("Drawer", "A stylish drawer to keep your essentials.", R.drawable.mo_drawer),
-        Product("Stool", "A sturdy stool for any occasion.", R.drawable.mo_stool),
-        Product("Table", "A modern table for your living room.", R.drawable.mo_table),
-        Product("TV", "A high-definition television.", R.drawable.mo_tv)
+        Product("Bathub", "A Simple Yet Relaxing Bath!", R.drawable.mo_bathub),
+        Product("Chair", "A Reliable Comfort!", R.drawable.mo_chair),
+        Product("Drawer", "Reliable Storage For Your Room!", R.drawable.mo_drawer),
+        Product("Stool", "Sleek And Fancy Way To Sit!", R.drawable.mo_stool),
+        Product("Table", "Very Sleek, Sturdy, and Cheap!", R.drawable.mo_table),
+        Product("TV", "Entertainment In Front Of You!", R.drawable.mo_tv)
     )
 
     Scaffold(
@@ -81,8 +81,8 @@ fun Homepage(navController: NavController) {
                 items(products.take(3)) { product ->
                     Box(
                         modifier = Modifier
-                            .width(400.dp)
-                            .height(150.dp)
+                            .width(200.dp)
+                            .height(250.dp)
                             .padding(8.dp)
                             .clickable {
                                 // Navigate to the respective screen based on the product name
@@ -108,7 +108,7 @@ fun Homepage(navController: NavController) {
             }
 
             Text(
-                text = "View All Products",
+                text = "All Of Our Products",
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(start = 16.dp, top = 24.dp)
             )

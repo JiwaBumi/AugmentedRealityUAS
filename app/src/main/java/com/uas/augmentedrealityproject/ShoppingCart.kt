@@ -36,7 +36,7 @@ fun ShoppingCart(navController: NavController, cartViewModel: CartViewModel) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Shopping Cart") },
+                title = { Text("Your Cart") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate("homepage") }) {
                         Icon(painter = painterResource(id = R.drawable.backreturn), contentDescription = "Back")
@@ -75,13 +75,33 @@ fun ShoppingCart(navController: NavController, cartViewModel: CartViewModel) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Proceed to Payment button
-            Button(
-                onClick = { proceedToPayment(selectedItems) },
-                enabled = selectedItems.isNotEmpty(),
-                modifier = Modifier.fillMaxWidth()
+            // Row for action buttons
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Proceed to Payment")
+                // Proceed to Payment button
+                Button(
+                    onClick = { proceedToPayment(selectedItems) },
+                    enabled = selectedItems.isNotEmpty(),
+                    modifier = Modifier.weight(1f).padding(end = 8.dp)
+                ) {
+                    Text("Proceed to Payment")
+                }
+
+                // Remove from Cart button
+                Button(
+                    onClick = {
+                        selectedItems.forEach { productId ->
+                            cartViewModel.removeFromCart(productId)
+                        }
+                        selectedItems.clear() // Clear the selection after removing
+                    },
+                    enabled = selectedItems.isNotEmpty(),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Remove from Cart")
+                }
             }
         }
     }
