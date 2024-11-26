@@ -73,72 +73,62 @@ fun LoginScreen(navController: NavHostController) {
     var confirmPassword by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     var isRegistering by remember { mutableStateOf(false) }
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    fun showSnackbar(message: String) {
-        CoroutineScope(Dispatchers.Main).launch {
-            snackbarHostState.showSnackbar(message)
-        }
-    }
-
+    var isLoading by remember { mutableStateOf(false) }
 
     fun handleRegister() {
-        if (password != confirmPassword) {
-            errorMessage = "Passwords do not match!"
-            return
-        }
+        CoroutineScope(Dispatchers.IO).launch {
+            if (password != confirmPassword) {
+                withContext(Dispatchers.Main) {
+                    errorMessage = "Passwords do not match!"
+                }
+                return@launch
+            }
 
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+            try {
+                auth.createUserWithEmailAndPassword(email, password).await()
+                withContext(Dispatchers.Main) {
                     email = ""
                     password = ""
                     confirmPassword = ""
                     errorMessage = ""
                     isRegistering = false
-                    showSnackbar("Registration Successful!")
-                } else {
-                    errorMessage = "Registration failed: ${task.exception?.message}"
-                }
-            }
-    }
-
-    fun handleLogin() {
-        // Show the initial Snackbar message while logging in
-        showSnackbar("Logging You In...")
-
-        // Run Firebase operation in a background thread
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                // Directly sign in the user without storing the result
-                auth.signInWithEmailAndPassword(email, password).await()
-                withContext(Dispatchers.Main) {
-                    // Navigate to homepage after successful login
-                    navController.navigate("homepage") {
-                        popUpTo("login") { inclusive = true }
-                    }
-                    // After login, show the success message
-                    showSnackbar("Logged In Successfully!")
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    errorMessage = "Login failed: ${e.message}"
+                    errorMessage = "Registration failed: ${e.message}"
                 }
             }
         }
     }
 
-
-
-
+    fun handleLogin() {
+        isLoading = true
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                auth.signInWithEmailAndPassword(email, password).await()
+                withContext(Dispatchers.Main) {
+                    navController.navigate("homepage") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    errorMessage = "Login failed: ${e.message}"
+                }
+            } finally {
+                withContext(Dispatchers.Main) {
+                    isLoading = false
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("") }
             )
-        },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -156,7 +146,6 @@ fun LoginScreen(navController: NavHostController) {
                     .size(300.dp) // Increased size for the logo
                     .padding(bottom = 32.dp)
             )
-
 
             TextField(
                 value = email,
@@ -202,9 +191,14 @@ fun LoginScreen(navController: NavHostController) {
                         handleLogin()
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !isLoading // Disable the button while loading
             ) {
-                Text(if (isRegistering) "Register" else "Login")
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                } else {
+                    Text(if (isRegistering) "Register" else "Login")
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
