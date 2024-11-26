@@ -13,6 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.Image
 import com.google.firebase.auth.FirebaseAuth
 import com.uas.augmentedrealityproject.ui.theme.AugmentedRealityProjectTheme
 import androidx.navigation.NavHostController
@@ -28,6 +29,11 @@ import com.uas.augmentedrealityproject.products.StoolProduct
 import com.uas.augmentedrealityproject.products.TVProduct
 import com.uas.augmentedrealityproject.products.TableProduct
 import com.uas.augmentedrealityproject.viewmodel.CartViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 
 class MainActivity : ComponentActivity() {
@@ -67,6 +73,14 @@ fun LoginScreen(navController: NavHostController) {
     var confirmPassword by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
     var isRegistering by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    fun showSnackbar(message: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            snackbarHostState.showSnackbar(message)
+        }
+    }
+
 
     fun handleRegister() {
         if (password != confirmPassword) {
@@ -82,6 +96,7 @@ fun LoginScreen(navController: NavHostController) {
                     confirmPassword = ""
                     errorMessage = ""
                     isRegistering = false
+                    showSnackbar("Registration Successful!")
                 } else {
                     errorMessage = "Registration failed: ${task.exception?.message}"
                 }
@@ -89,32 +104,52 @@ fun LoginScreen(navController: NavHostController) {
     }
 
     fun handleLogin() {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Navigate to the homepage after successful login
+        // Run Firebase operation in a background thread
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val result = auth.signInWithEmailAndPassword(email, password).await()
+                withContext(Dispatchers.Main) {
+                    // Navigate to homepage
                     navController.navigate("homepage") {
                         popUpTo("login") { inclusive = true }
                     }
-                } else {
-                    errorMessage = "Login failed: ${task.exception?.message}"
+                    showSnackbar("Logged In Successfully!")
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    errorMessage = "Login failed: ${e.message}"
                 }
             }
+        }
     }
+
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Login / Register") }
+                title = { Text("") }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
+            // Logo
+            Image(
+                painter = painterResource(id = R.drawable.our_logo),
+                contentDescription = "App Logo",
+                modifier = Modifier
+                    .size(300.dp) // Increased size for the logo
+                    .padding(bottom = 32.dp)
+            )
+
+
             TextField(
                 value = email,
                 onValueChange = { email = it },
