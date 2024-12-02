@@ -17,13 +17,18 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.uas.augmentedrealityproject.ui.theme.AugmentedRealityProjectTheme
+import com.uas.augmentedrealityproject.viewmodel.CartViewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+
 
 data class Product(val name: String, val description: String, val imageRes: Int)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Homepage(navController: NavController) {
+fun Homepage(navController: NavController, cartViewModel: CartViewModel) {
     val auth = FirebaseAuth.getInstance()
+    val selectedItems = cartViewModel.cart.collectAsState().value // Get current cart items
 
     // Product list
     val products = listOf(
@@ -53,6 +58,7 @@ fun Homepage(navController: NavController) {
                 },
                 title = {},
                 actions = {
+                    // Shopping cart button
                     IconButton(onClick = { navController.navigate("shoppingcart") }) {
                         Icon(
                             painter = painterResource(id = R.drawable.shopping_cart),
@@ -153,10 +159,13 @@ fun Homepage(navController: NavController) {
     }
 }
 
+
+
+
 @Preview(showBackground = true)
 @Composable
 fun HomepagePreview() {
     AugmentedRealityProjectTheme {
-        Homepage(rememberNavController())
+        Homepage(navController = rememberNavController(), cartViewModel = CartViewModel())
     }
 }

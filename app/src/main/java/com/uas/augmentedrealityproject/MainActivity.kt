@@ -43,13 +43,12 @@ class MainActivity : ComponentActivity() {
             AugmentedRealityProjectTheme {
                 val navController = rememberNavController()
                 val cartViewModel: CartViewModel = viewModel()
-
                 NavHost(
                     navController = navController,
                     startDestination = "login"
                 ) {
                     composable("login") { LoginScreen(navController) }
-                    composable("homepage") { Homepage(navController) }
+                    composable("homepage") { Homepage(navController, cartViewModel) }
                     composable("shoppingcart") { ShoppingCart(navController, cartViewModel) }
                     composable("table") { TableProduct(navController, cartViewModel) }
                     composable("chair") { ChairProduct(navController, cartViewModel) }
@@ -57,11 +56,26 @@ class MainActivity : ComponentActivity() {
                     composable("stool") { StoolProduct(navController, cartViewModel) }
                     composable("tv") { TVProduct(navController, cartViewModel) }
                     composable("drawer") { DrawerProduct(navController, cartViewModel) }
+                    composable("payment/{selectedItems}") { backStackEntry ->
+                        val selectedItems = backStackEntry.arguments?.getString("selectedItems")
+                            ?.split(",")?.map { it.toInt() } ?: emptyList()
+                        Payment(navController, selectedItems, cartViewModel)
+                    }
+                    composable("billing/{selectedItems}") { backStackEntry ->
+                        val selectedItems = backStackEntry.arguments?.getString("selectedItems")
+                            ?.split(",")?.map { it.toInt() } ?: emptyList()
+                        Billing(navController, selectedItems)
+                    }
+
                 }
             }
         }
     }
 }
+
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -143,7 +157,7 @@ fun LoginScreen(navController: NavHostController) {
                 painter = painterResource(id = R.drawable.our_logo),
                 contentDescription = "App Logo",
                 modifier = Modifier
-                    .size(300.dp) // Increased size for the logo
+                    .size(300.dp)
                     .padding(bottom = 32.dp)
             )
 

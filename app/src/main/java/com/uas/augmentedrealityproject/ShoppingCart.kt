@@ -1,10 +1,7 @@
 package com.uas.augmentedrealityproject
 
-import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,12 +10,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.uas.augmentedrealityproject.viewmodel.CartViewModel
-import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.ViewModel
 
 // Map to assign the names to product ID accordingly
-val productNames = mapOf(
+val cartProductNames = mapOf(
     1 to "Table",
     2 to "Chair",
     3 to "TV",
@@ -26,6 +22,7 @@ val productNames = mapOf(
     5 to "Bathub",
     6 to "Stool"
 )
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,7 +36,10 @@ fun ShoppingCart(navController: NavController, cartViewModel: CartViewModel) {
                 title = { Text("Your Cart") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigate("homepage") }) {
-                        Icon(painter = painterResource(id = R.drawable.backreturn), contentDescription = "Back")
+                        Icon(
+                            painter = painterResource(id = R.drawable.backreturn),
+                            contentDescription = "Back"
+                        )
                     }
                 }
             )
@@ -82,12 +82,20 @@ fun ShoppingCart(navController: NavController, cartViewModel: CartViewModel) {
             ) {
                 // Proceed to Payment button
                 Button(
-                    onClick = { proceedToPayment(selectedItems) },
+                    onClick = {
+                        if (selectedItems.isNotEmpty()) {
+                            val selectedItemsString = selectedItems.joinToString(",")
+                            navController.navigate("payment/$selectedItemsString")
+                        }
+                    },
                     enabled = selectedItems.isNotEmpty(),
-                    modifier = Modifier.weight(1f).padding(end = 8.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
                 ) {
                     Text("Proceed to Payment")
                 }
+
 
                 // Remove from Cart button
                 Button(
@@ -110,7 +118,7 @@ fun ShoppingCart(navController: NavController, cartViewModel: CartViewModel) {
 @Composable
 fun CartItem(productId: Int, selectedItems: MutableList<Int>, onCheckedChange: (Boolean) -> Unit) {
     // Get the product name using the productId
-    val productName = productNames[productId] ?: "Unknown Product"
+    val productName = cartProductNames[productId] ?: "Unknown Product"
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -118,7 +126,7 @@ fun CartItem(productId: Int, selectedItems: MutableList<Int>, onCheckedChange: (
             .fillMaxWidth()
             .padding(vertical = 8.dp)
     ) {
-        // Display the product name instead of the generic "Product X"
+        // Display the product names
         Text(productName, style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.weight(1f))
 
@@ -129,14 +137,10 @@ fun CartItem(productId: Int, selectedItems: MutableList<Int>, onCheckedChange: (
     }
 }
 
-fun proceedToPayment(selectedItems: List<Int>) {
-    // LogCat that Intent has been made
-    Log.d("ShoppingCart", "Created Intent(${selectedItems.joinToString(", ")})")
 
-    // Example Intent for proceeding with selected product IDs
-    val intent = Intent().apply {
-        putExtra("selectedProductIds", selectedItems.toIntArray()) // Add selected product IDs to the Intent
-    }
-
-    // All other logic later below TBC
+@Preview(showBackground = true)
+@Composable
+fun ShoppingCartPreview() {
+    // A placeholder NavController preview
+    ShoppingCart(navController = rememberNavController(), cartViewModel = CartViewModel())
 }
