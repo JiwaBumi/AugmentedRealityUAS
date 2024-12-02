@@ -1,5 +1,6 @@
 package com.uas.augmentedrealityproject.products
 
+import android.content.Intent
 import com.uas.augmentedrealityproject.R
 
 import androidx.compose.foundation.Image
@@ -16,10 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.uas.augmentedrealityproject.utils.launchUnityAR
 import com.uas.augmentedrealityproject.viewmodel.CartViewModel
+import java.io.File
+import java.io.FileOutputStream
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,10 +34,10 @@ fun ChairProduct(navController: NavController, cartViewModel: CartViewModel) {
 
     //To be used in the carousel (lazyrow)
     val productList = listOf(
-        "bathub" to R.drawable.mo_bathub,
+        "coffee" to R.drawable.mo_coffee,
         "table" to R.drawable.mo_table,
-        "drawer" to R.drawable.mo_drawer,
-        "tv" to R.drawable.mo_tv,
+        "grasslamp" to R.drawable.mo_grasslamp,
+        "lamp" to R.drawable.mo_lamp,
         "stool" to R.drawable.mo_stool,
         "chair" to R.drawable.mo_chair
     )
@@ -78,8 +84,8 @@ fun ChairProduct(navController: NavController, cartViewModel: CartViewModel) {
 
                 // Product Info
                 Column {
-                    Text("Chair", style = MaterialTheme.typography.headlineSmall)
-                    Text("A Reliable Comfort! \nRp.1.000.000", style = MaterialTheme.typography.bodyMedium)
+                    Text("Hanging Pod Chair", style = MaterialTheme.typography.headlineSmall)
+                    Text("A new way to relax! \nRp 3.000.000", style = MaterialTheme.typography.bodyMedium)
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Buttons
@@ -98,7 +104,7 @@ fun ChairProduct(navController: NavController, cartViewModel: CartViewModel) {
                             )
                         }
                         Button(
-                            onClick = { /* PLACEHOLDER ACTION */ },
+                            onClick = { launchUnityAR(navController.context) },
                             modifier = Modifier.weight(1f)
                         ) {
                             Text("AR View")
@@ -117,17 +123,7 @@ fun ChairProduct(navController: NavController, cartViewModel: CartViewModel) {
             )
             Text(
                 text = """
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et urna id lacus dignissim ullamcorper. 
-                    Integer non lorem et turpis pretium cursus. Donec vel mi sit amet nulla interdum volutpat. Curabitur in bibendum turpis.
-                    
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et urna id lacus dignissim ullamcorper. 
-                    Integer non lorem et turpis pretium cursus. Donec vel mi sit amet nulla interdum volutpat. Curabitur in bibendum turpis.
-                    
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et urna id lacus dignissim ullamcorper. 
-                    Integer non lorem et turpis pretium cursus. Donec vel mi sit amet nulla interdum volutpat. Curabitur in bibendum turpis.
-                    
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et urna id lacus dignissim ullamcorper. 
-                    Integer non lorem et turpis pretium cursus. Donec vel mi sit amet nulla interdum volutpat. Curabitur in bibendum turpis.
+                    Experience ultimate comfort with this hanging pod chair! Its sleek metallic frame ensures robustness and safety! Perfect for both indoors and outdoors! Cozy and relaxing, you will love it!
                 """.trimIndent(),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 8.dp)
@@ -171,6 +167,7 @@ fun ChairProduct(navController: NavController, cartViewModel: CartViewModel) {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

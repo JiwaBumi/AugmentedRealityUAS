@@ -14,12 +14,12 @@ import java.util.*
 
 // Map for product prices
 val productPrices = mapOf(
-    1 to 750000,
-    2 to 1000000,
-    3 to 6500000,
-    4 to 3000000,
-    5 to 5000000,
-    6 to 980000
+    1 to 1500000,
+    2 to 3000000,
+    3 to 500000,
+    4 to 1280000,
+    5 to 700000,
+    6 to 1300000
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +30,7 @@ fun Billing(navController: NavController, purchasedItems: List<Int>) {
     // Function to format numbers with commas
     fun formatPrice(price: Int): String {
         val numberFormat = NumberFormat.getInstance(Locale("id", "ID")) // Indonesian Currency Format
-        return "Rp.${numberFormat.format(price)}"
+        return "Rp ${numberFormat.format(price)}"
     }
 
     Scaffold(

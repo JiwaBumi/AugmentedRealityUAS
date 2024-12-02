@@ -1,5 +1,6 @@
 package com.uas.augmentedrealityproject.products
 
+import android.content.Intent
 import com.uas.augmentedrealityproject.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -15,10 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.uas.augmentedrealityproject.utils.launchUnityAR
 import com.uas.augmentedrealityproject.viewmodel.CartViewModel
+import java.io.File
+import java.io.FileOutputStream
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,10 +33,10 @@ fun TableProduct(navController: NavController, cartViewModel: CartViewModel) {
 
     //To be used in the carousel (lazyrow)
     val productList = listOf(
-        "bathub" to R.drawable.mo_bathub,
+        "coffee" to R.drawable.mo_coffee,
         "table" to R.drawable.mo_table,
-        "drawer" to R.drawable.mo_drawer,
-        "tv" to R.drawable.mo_tv,
+        "grasslamp" to R.drawable.mo_grasslamp,
+        "lamp" to R.drawable.mo_lamp,
         "stool" to R.drawable.mo_stool,
         "chair" to R.drawable.mo_chair
     )
@@ -79,7 +84,7 @@ fun TableProduct(navController: NavController, cartViewModel: CartViewModel) {
                 // Product Info
                 Column {
                     Text("Table", style = MaterialTheme.typography.headlineSmall)
-                    Text("Very Sleek, Sturdy, and Cheap! \nRp.750.000", style = MaterialTheme.typography.bodyMedium)
+                    Text("Versatile, sleek, and robust! Ideal for small spaces! \nRp 1.500.000", style = MaterialTheme.typography.bodyMedium)
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Buttons
@@ -98,7 +103,7 @@ fun TableProduct(navController: NavController, cartViewModel: CartViewModel) {
                             )
                         }
                         Button(
-                            onClick = { /* PLACEHOLDER ACTION */ },
+                            onClick = { launchUnityAR(navController.context) },
                             modifier = Modifier.weight(1f)
                         ) {
                             Text("AR View")
@@ -117,7 +122,7 @@ fun TableProduct(navController: NavController, cartViewModel: CartViewModel) {
             )
             Text(
                 text = """
-                    This sleek modern coffee table will make a fine addition to your living room! Even for only Rp. 750,000 we can still assure you of its quality!
+                    Crafted from high-quality wood, this table offers both style and durability. Its compact size makes it suitable for use in various settings, from home offices to cozy living rooms, combining natural beauty with practicality.
                 """.trimIndent(),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(start = 16.dp, top = 8.dp)

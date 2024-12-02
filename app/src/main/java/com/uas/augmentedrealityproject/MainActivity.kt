@@ -22,11 +22,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.uas.augmentedrealityproject.products.BathubProduct
 import com.uas.augmentedrealityproject.products.ChairProduct
-import com.uas.augmentedrealityproject.products.DrawerProduct
+import com.uas.augmentedrealityproject.products.CoffeeProduct
+import com.uas.augmentedrealityproject.products.GrasslampProduct
+import com.uas.augmentedrealityproject.products.LampProduct
 import com.uas.augmentedrealityproject.products.StoolProduct
-import com.uas.augmentedrealityproject.products.TVProduct
 import com.uas.augmentedrealityproject.products.TableProduct
 import com.uas.augmentedrealityproject.viewmodel.CartViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -52,10 +52,10 @@ class MainActivity : ComponentActivity() {
                     composable("shoppingcart") { ShoppingCart(navController, cartViewModel) }
                     composable("table") { TableProduct(navController, cartViewModel) }
                     composable("chair") { ChairProduct(navController, cartViewModel) }
-                    composable("bathub") { BathubProduct(navController, cartViewModel) }
+                    composable("grasslamp") { GrasslampProduct(navController, cartViewModel) }
                     composable("stool") { StoolProduct(navController, cartViewModel) }
-                    composable("tv") { TVProduct(navController, cartViewModel) }
-                    composable("drawer") { DrawerProduct(navController, cartViewModel) }
+                    composable("coffee") { CoffeeProduct(navController, cartViewModel) }
+                    composable("lamp") { LampProduct(navController, cartViewModel) }
                     composable("payment/{selectedItems}") { backStackEntry ->
                         val selectedItems = backStackEntry.arguments?.getString("selectedItems")
                             ?.split(",")?.map { it.toInt() } ?: emptyList()

@@ -32,12 +32,12 @@ fun Homepage(navController: NavController, cartViewModel: CartViewModel) {
 
     // Product list
     val products = listOf(
-        Product("Bathub", "A Simple Yet Relaxing Bath!", R.drawable.mo_bathub),
-        Product("Chair", "A Reliable Comfort!", R.drawable.mo_chair),
-        Product("Drawer", "Reliable Storage For Your Room!", R.drawable.mo_drawer),
+        Product("Grass Lamp", "Bring nature indoors with this eco-inspired lamp!", R.drawable.mo_grasslamp),
+        Product("Hanging Pod Chair", "A Reliable Comfort!", R.drawable.mo_chair),
+        Product("Lamp", "Sleek and functional lighting!", R.drawable.mo_lamp),
         Product("Stool", "Sleek And Fancy Way To Sit!", R.drawable.mo_stool),
-        Product("Table", "Very Sleek, Sturdy, and Cheap!", R.drawable.mo_table),
-        Product("TV", "Entertainment In Front Of You!", R.drawable.mo_tv)
+        Product("Table", "Versatile, sleek, and robust! Ideal for small spaces!", R.drawable.mo_table),
+        Product("Coffee Table", "A stylish wooden coffee table that complements any living room", R.drawable.mo_coffee)
     )
 
     Scaffold(
@@ -93,11 +93,11 @@ fun Homepage(navController: NavController, cartViewModel: CartViewModel) {
                             .clickable {
                                 // Navigate to the respective screen based on the product name
                                 when (product.name) {
-                                    "Bathub" -> navController.navigate("bathub")
-                                    "Chair" -> navController.navigate("chair")
-                                    "Drawer" -> navController.navigate("drawer")
+                                    "Lamp" -> navController.navigate("lamp")
+                                    "Hanging Pod Chair" -> navController.navigate("chair")
+                                    "Coffee Table" -> navController.navigate("coffee")
                                     "Stool" -> navController.navigate("stool")
-                                    "TV" -> navController.navigate("tv")
+                                    "Grass Lamp" -> navController.navigate("grasslamp")
                                     "Table" -> navController.navigate("table")
                                     else -> navController.navigate("homepage") // Fallback
                                 }
@@ -132,12 +132,12 @@ fun Homepage(navController: NavController, cartViewModel: CartViewModel) {
                             .clickable {
                                 // Navigate to the respective screen based on product name
                                 when (product.name) {
-                                    "Table" -> navController.navigate("table")
-                                    "Chair" -> navController.navigate("chair")
-                                    "Drawer" -> navController.navigate("drawer")
+                                    "Lamp" -> navController.navigate("lamp")
+                                    "Grass Lamp" -> navController.navigate("grasslamp")
+                                    "Hanging Pod Chair" -> navController.navigate("chair")
                                     "Stool" -> navController.navigate("stool")
-                                    "TV" -> navController.navigate("tv")
-                                    "Bathub" -> navController.navigate("bathub")
+                                    "Coffee Table" -> navController.navigate("coffee")
+                                    "Table" -> navController.navigate("table")
                                 }
                             },
                         verticalAlignment = Alignment.CenterVertically
