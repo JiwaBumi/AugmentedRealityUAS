@@ -24,10 +24,10 @@ fun launchUnityAR(context: Context) {
         }
     }
 
-    // Use a FileProvider for compatibility with newer Android versions
+
     val uri = FileProvider.getUriForFile(
         context,
-        "${context.packageName}.provider", // Add provider name in AndroidManifest
+        "${context.packageName}.provider",
         unityApk
     )
 
